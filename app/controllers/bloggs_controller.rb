@@ -1,5 +1,5 @@
 class BloggsController < ApplicationController
-  before_action :set_blogg, only: [:show, :edit, :update, :destroy]
+  before_action :set_blogg, only: [:show, :edit, :update, :destroy, :toggle_status]
 
   # GET /bloggs
   # GET /bloggs.json
@@ -49,6 +49,15 @@ class BloggsController < ApplicationController
         format.json { render json: @blogg.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def toggle_status
+    if @blogg.draft?
+      @blogg.published!
+    elsif @blogg.published?
+      @blogg.draft!
+    end
+    redirect_to bloggs_url, notice: 'Post status has been updated.'
   end
 
   # DELETE /bloggs/1
